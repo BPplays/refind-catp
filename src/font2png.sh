@@ -38,7 +38,7 @@ function print_help(){
 
 if [ $# -ne 0 ]
     then
-        ARGS=`getopt -a -o hlf:s:y: -l help,list-font,font:,size:,y-pos: -n "$0" -- "$@"`
+        ARGS=`getopt -a -o hlf:s:y:c: --long help,list-font,font:,size:,y-pos:,color: --name "$0" -- "$@"`
         eval set -- "$ARGS"
 
         while [ $# -ne 0 ]
