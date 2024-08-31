@@ -66,8 +66,8 @@ if [ $# -ne 0 ]
                         shift 2
                         ;;
                     -i|--invert)
-                        FONT_INVERT=true
-                        shift 1
+                        FONT_INVERT=$2
+                        shift 2
                         ;;
                     -y|--y-pos)
                         Y_POS=$2
