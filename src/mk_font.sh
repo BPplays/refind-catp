@@ -14,8 +14,8 @@ colors=(
 )
 
 mkdir -p fonts
-y_pos=0
-for font in  "inter.ttf"; do
+y_pos=-3
+for font in  "inter.ttf" "RobotoMono-Regular.ttf"; do
     for col in "#cdd6f4" "#cad3f5" "#c6d0f5" "#4c4f69"; do
 
         mkdir -p "fonts/${colors[$col]}"
