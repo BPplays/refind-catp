@@ -13,6 +13,16 @@ colors=(
     ["#4c4f69"]="Latte"
 )
 
+
+colors_inv=(
+    ["#cdd6f4"]="-i"
+    ["#cad3f5"]="-i"
+    ["#c6d0f5"]="-i"
+    ["#4c4f69"]=""
+)
+
+
+
 mkdir -p fonts
 y_pos=-3
 for font in  "inter.ttf" "RobotoMono-Regular.ttf"; do
@@ -20,7 +30,7 @@ for font in  "inter.ttf" "RobotoMono-Regular.ttf"; do
 
         mkdir -p "fonts/${colors[$col]}"
         for size in  14 16 18 28 30 32 42 44 46; do
-            ./font2png.sh -f $font -s $size -c $col -y $y_pos "fonts/${colors[$col]}/${font,,}-$size.png"
+            ./font2png.sh -f $font -s $size -c $col ${colors_inv[$col]} -y $y_pos "fonts/${colors[$col]}/${font,,}-$size.png"
         done
     done
 done
