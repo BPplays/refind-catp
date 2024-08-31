@@ -12,6 +12,7 @@ CONVERT=`which convert 2> /dev/null`
 FONT_NAME=""
 FONT_SIZE=""
 FONT_COLOR="#000000"
+FONT_INVERT=false
 Y_POS=0
 
 function print_help(){
@@ -38,7 +39,7 @@ function print_help(){
 
 if [ $# -ne 0 ]
     then
-        ARGS=`getopt -a -o hlf:s:y:c: --long help,list-font,font:,size:,y-pos:,color: --name "$0" -- "$@"`
+        ARGS=`getopt -a -o hlf:s:y:c:i: --long help,list-font,font:,size:,y-pos:,color:,invert: --name "$0" -- "$@"`
         eval set -- "$ARGS"
 
         while [ $# -ne 0 ]
@@ -63,6 +64,10 @@ if [ $# -ne 0 ]
                     -c|--color)
                         FONT_COLOR=$2
                         shift 2
+                        ;;
+                    -i|--invert)
+                        FONT_INVERT=true
+                        shift 1
                         ;;
                     -y|--y-pos)
                         Y_POS=$2
@@ -134,6 +139,10 @@ if [[ ! $OUTPUT_PNG =~ .png$ ]]
         exit 1
 fi
 
+if [[ $FONT_INVERT == true ]]; then
+
+  NEG="-negate"
+fi
 
 
 HEIGHT=$FONT_SIZE
@@ -145,5 +154,5 @@ $CONVERT -size ${WIDTH}x${HEIGHT} xc:transparent \
 -font $FONT_NAME \
 -pointsize $FONT_SIZE \
 -fill $FONT_COLOR \
--draw "text 0,$Y_POS ' !\"#\$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\`abcdefghijklmnopqrstuvwxyz{|}~?'" \
+-draw "text 0,$Y_POS ' !\"#\$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\`abcdefghijklmnopqrstuvwxyz{|}~?'" $NEG \
 $OUTPUT_PNG
