@@ -14,6 +14,7 @@ colors=(
 )
 
 
+declare -A colors_inv
 colors_inv=(
     ["#cdd6f4"]="-i"
     ["#cad3f5"]="-i"
