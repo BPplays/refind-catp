@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Apply from mkfont.sh (by Roderick W. Smith)
-# 
+#
 # This program is licensed under the terms of the GNU GPL, version 3,
 # or (at your option) any later version.
 # You should have received a copy of the GNU General Public License
@@ -11,6 +11,7 @@ CONVERT=`which convert 2> /dev/null`
 
 FONT_NAME=""
 FONT_SIZE=""
+FONT_COLOR="#000000"
 Y_POS=0
 
 function print_help(){
@@ -21,10 +22,11 @@ function print_help(){
     echo "$0 [options]... <outfile.png>"
     echo ""
     echo "Options:"
-    echo "-f,--font: <font_name>              Name of font"      
+    echo "-f,--font: <font_name>              Name of font"
     echo "-s,--size: <number>                 Font size in points"
     echo "-y,--y-pos: <number> or <number%>   Y offset position in pixels"
     echo "                                      or in percentage by font height"
+    echo "-c,--color: color hex #0f0f0f       hex code for font color"
     echo ""
     echo ""
     echo "-l,--list-font                      Display fonts list and exit"
@@ -49,7 +51,7 @@ if [ $# -ne 0 ]
                     -l|--list-font)
                         $CONVERT -list font
                         exit 1
-                        ;;    
+                        ;;
                     -f|--font)
                         FONT_NAME=$2
                         shift 2
@@ -58,11 +60,15 @@ if [ $# -ne 0 ]
                         FONT_SIZE=$2
                         shift 2
                         ;;
+                    -c|--color)
+                        FONT_COLOR=$2
+                        shift 2
+                        ;;
                     -y|--y-pos)
                         Y_POS=$2
                         shift 2
-                        ;;   
-                    --) 
+                        ;;
+                    --)
                         shift
                         break
                         ;;
@@ -79,7 +85,7 @@ if [[ $FONT_NAME == "" ]]
     then
         echo "$0 --font must be specified." 1>&2
         exit 1
-fi        
+fi
 #font-size
 if [[ $FONT_SIZE == "" ]]
     then
@@ -87,11 +93,11 @@ if [[ $FONT_SIZE == "" ]]
         exit 1
 elif [[  $FONT_SIZE =~ ^[0-9]+([.][0-9]+)?$ ]] || [[  $FONT_SIZE =~ ^-?[0-9]+([.][0-9]+)?$ ]]
     then
-        font_size=`echo $FONT_SIZE | sed 's/^-//g'` #convert to positive 
+        font_size=`echo $FONT_SIZE | sed 's/^-//g'` #convert to positive
         FONT_SIZE=${font_size%.*}
     else
         echo "$0 --size \`$FONT_SIZE' wrong numerical." 1>&2
-        exit 1      
+        exit 1
 fi
 #y-pos default=0
 if [[ $Y_POS =~ ^[0-9]+([.][0-9]+)?$ ]] || [[ $Y_POS =~ ^-?[0-9]+([.][0-9]+)?$ ]] #y-pos in pixels
@@ -107,11 +113,11 @@ elif [[ $Y_POS =~ ^-?[0-9]+([.][0-9]+)?%$ ]] #y-pos in percentage(negative)
     then
         v=`echo $Y_POS | sed 's/^-//g; s/%$//g'`
         let y_position=(${FONT_SIZE}*${v%.*})/100
-        Y_POS=`echo "-$y_position"`      
+        Y_POS=`echo "-$y_position"`
     else
         echo "$0 --y-pos \`$Y_POS' wrong numerical." 1>&2
         exit 1
-fi    
+fi
 #output_file
 if [ $# -gt 0 ]
     then
@@ -125,7 +131,7 @@ fi
 if [[ ! $OUTPUT_PNG =~ .png$ ]]
     then
         echo "$0 \`$OUTPUT_PNG', output file must be PNG." 1>&2
-        exit 1            
+        exit 1
 fi
 
 
@@ -138,5 +144,6 @@ $CONVERT -size ${WIDTH}x${HEIGHT} xc:transparent \
 -gravity SouthWest \
 -font $FONT_NAME \
 -pointsize $FONT_SIZE \
+-fill $FONT_COLOR \
 -draw "text 0,$Y_POS ' !\"#\$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\`abcdefghijklmnopqrstuvwxyz{|}~?'" \
 $OUTPUT_PNG
